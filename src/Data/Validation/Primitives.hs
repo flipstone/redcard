@@ -82,7 +82,7 @@ nonEmpty validator =
   Validator $ \input ->
     case (run validator input) of
     Valid list | length list < 1 -> Invalid (errMessage $ Text.pack "must_have_at_least_one_in_list")
-    result-> result
+    result -> result
 
 arrayOf :: Validator a -> Validator [a]
 arrayOf validator =
