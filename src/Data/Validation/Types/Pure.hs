@@ -27,12 +27,12 @@ data Lookup input = LookupResult (Maybe input)
 data ValidationResult a =
     Valid a
   | Invalid Errors
-  deriving Show
+  deriving (Eq, Show)
 
 data Errors =
     Messages (Set.Set Text.Text)
   | Group (Map.Map Text.Text Errors)
-  deriving Show
+  deriving (Eq, Show)
 
 -- Helpers for building primitive validators
 
