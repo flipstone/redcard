@@ -1,5 +1,7 @@
-dev:
-  image: haskell:7.10.3
-  volumes:
-    - .:/redcard
-  working_dir: /redcard
+version: '3'
+services:
+  dev:
+    image: flipstone/stack:v2-1.9.3
+    volumes:
+      - .:/redcard
+    working_dir: /redcard

@@ -51,20 +51,24 @@ mapErrors f (Invalid errs) = Invalid (f errs)
 mapErrors _ valid = valid
 
 -- Instances
+instance Semigroup Errors where
+  (Messages m) <> (Messages m') = Messages (m <> m')
+  (Group g) <> (Group g')       = Group (Map.unionWith mappend g g')
+  g <> m@(Messages _)           = g <> nestErrors "" m
+  m <> g                        = nestErrors "" m <> g
+
 
 instance Monoid Errors where
   mempty = Messages Set.empty
-  (Messages m) `mappend` (Messages m') = Messages (m `mappend` m')
-  (Group g) `mappend` (Group g') = Group (Map.unionWith mappend g g')
-  g `mappend` m@(Messages _) = g `mappend` nestErrors "" m
-  m `mappend` g = nestErrors "" m `mappend` g
+
+instance Semigroup a => Semigroup (ValidationResult a) where
+  (Valid a) <> (Valid a')     = Valid (a <> a')
+  (Invalid e) <> (Invalid e') = Invalid (e <> e')
+  (Valid _) <> invalid        = invalid
+  invalid <> (Valid _)        = invalid
 
 instance Monoid a => Monoid (ValidationResult a) where
   mempty = Valid mempty
-  (Valid a) `mappend` (Valid a') = Valid (a `mappend` a')
-  (Invalid e) `mappend` (Invalid e') = Invalid (e `mappend` e')
-  (Valid _) `mappend` invalid = invalid
-  invalid `mappend` (Valid _) = invalid
 
 instance Functor ValidationResult where
   f `fmap` (Valid a) = Valid (f a)

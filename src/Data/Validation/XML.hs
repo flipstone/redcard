@@ -26,11 +26,15 @@ data VXML =
   | VText Text.Text
 
 instance Validatable VXML where
-  inputText = getText
-  inputNull = getNull
-  arrayItems = getArray
+  inputBool        = getBool
+  inputText        = getText
+  inputNull        = getNull
+  arrayItems       = getArray
   scientificNumber = getNumber
-  lookupChild = getChild
+  lookupChild      = getChild
+
+getBool :: VXML -> Maybe Bool
+getBool vxml = getText vxml >>= parseBool
 
 getText :: VXML -> Maybe Text.Text
 getText (VDoc (Document _ root _)) = getText (VElem root)
@@ -101,17 +105,26 @@ elemWithName elemName node = do
     Nothing
 
 parseNumber :: Text.Text -> Maybe Scientific
-parseNumber text = case reads (Text.unpack (Text.strip text)) of
-                   (n, "") : _ -> Just n
-                   _ -> Nothing
+parseNumber text =
+  case reads (Text.unpack (Text.strip text)) of
+    (n, "") : _ -> Just n
+    _           -> Nothing
+
+parseBool :: Text.Text -> Maybe Bool
+parseBool text =
+  case reads (Text.unpack (Text.strip text)) of
+    (n, "") : _ -> Just n
+    _           -> Nothing
 
 data Content = Content Text.Text
              | NotContent
 
+instance Semigroup Content where
+  (Content t) <> (Content t') = Content (t <> t')
+  _ <> _                      = NotContent
+
 instance Monoid Content where
   mempty = Content ""
-  (Content t) `mappend` (Content t') = Content (t `mappend` t')
-  _ `mappend` _ = NotContent
 
 contentText :: Content -> Text.Text
 contentText (Content text) = text

@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                redcard
-version:             0.1.0.1
+version:             0.2.0.0
 synopsis:            Applicative Validation for JSON & XML
 -- description:
 license:             AllRightsReserved
@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  ghc-options:      -Wall -fno-warn-orphans
+  ghc-options:      -Wall -Werror -fno-warn-orphans
 
   default-extensions:  OverloadedStrings
 
@@ -34,7 +34,7 @@ library
 
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.8 && <4.9,
+  build-depends:       base >=4.8 && <4.13,
                        aeson >= 0.8,
                        aeson-pretty >= 0.7.2,
                        bytestring >= 0.10,
