@@ -1,0 +1,41 @@
+name: redcard
+version: '0.2.0.0'
+synopsis: Applicative Validation for JSON & XML
+category: Data
+author: Flipstone Technology Partners
+maintainer: development@flipstone.com
+license: AllRightsReserved
+default-extensions:
+- OverloadedStrings
+ghc-options:
+- -Wall
+- -Werror
+- -fno-warn-orphans
+dependencies:
+- base >=4.11 && <4.13
+- aeson
+- aeson-pretty
+- bytestring
+- containers
+- convertible
+- happstack-server
+- mtl
+- scientific
+- text
+- transformers
+- unordered-containers
+- vector
+- xml-conduit
+library:
+  source-dirs: src
+  exposed-modules:
+  - Data.Validation
+  - Data.Validation.Aeson
+  - Data.Validation.Primitives
+  - Data.Validation.Types
+  - Data.Validation.Types.Pure
+  - Data.Validation.Types.Trans
+  - Data.Validation.XML
+  - Happstack.Aeson
+  - Happstack.Aeson.Message
+  - Happstack.Aeson.Validation
