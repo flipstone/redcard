@@ -7,7 +7,7 @@ cabal-version: 1.12
 -- hash: 15a8c80e2e4a926e7ab3645c30b4fa5aeef122fe6072448ebf29e766f93637e6
 
 name:           redcard
-version:        0.2.0.0
+version:        0.2.1.0
 synopsis:       Applicative Validation for JSON & XML
 category:       Data
 author:         Flipstone Technology Partners
