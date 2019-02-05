@@ -38,6 +38,7 @@ getText (VElem (Element _ _ nodes)) = Just $ childrenText nodes
 getText (VText text) = Just $ text
 
 getNull :: VXML -> Maybe ()
+getNull (VElem (Element _ _ [])) = Just ()
 getNull _ = Nothing
 
 getArray :: VXML -> Maybe (Vec.Vector VXML)
