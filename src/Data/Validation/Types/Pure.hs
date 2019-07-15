@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE Rank2Types #-}
 module Data.Validation.Types.Pure where
 
@@ -19,7 +20,6 @@ class Validatable input where
   arrayItems :: input -> Maybe (Vec.Vector input)
   scientificNumber :: input -> Maybe Scientific
   lookupChild :: Text.Text -> input -> Lookup input
-
 
 data Lookup input = LookupResult (Maybe input)
                   | InvalidLookup
@@ -51,24 +51,41 @@ mapErrors f (Invalid errs) = Invalid (f errs)
 mapErrors _ valid = valid
 
 -- Instances
+#if MIN_VERSION_base(4,11,0)
 instance Semigroup Errors where
-  (Messages m) <> (Messages m') = Messages (m <> m')
-  (Group g) <> (Group g')       = Group (Map.unionWith mappend g g')
-  g <> m@(Messages _)           = g <> nestErrors "" m
-  m <> g                        = nestErrors "" m <> g
-
+  (<>) = errorsAppend
+#endif
 
 instance Monoid Errors where
   mempty = Messages Set.empty
+  mappend = errorsAppend
 
-instance Semigroup a => Semigroup (ValidationResult a) where
-  (Valid a) <> (Valid a')     = Valid (a <> a')
-  (Invalid e) <> (Invalid e') = Invalid (e <> e')
-  (Valid _) <> invalid        = invalid
-  invalid <> (Valid _)        = invalid
+errorsAppend :: Errors
+             -> Errors
+             -> Errors
+errorsAppend (Messages m) (Messages m') = Messages (m `mappend` m')
+errorsAppend (Group g) (Group g')       = Group (Map.unionWith mappend g g')
+errorsAppend g m@(Messages _)           = g `mappend` nestErrors "" m
+errorsAppend m g                        = nestErrors "" m `mappend` g
+
+#if MIN_VERSION_base(4,11,0)
+instance Monoid a => Semigroup (ValidationResult a) where
+  (<>) = validationResultAppend
+#endif
 
 instance Monoid a => Monoid (ValidationResult a) where
   mempty = Valid mempty
+  mappend = validationResultAppend
+
+validationResultAppend :: Monoid m
+                       => ValidationResult m
+                       -> ValidationResult m
+                       -> ValidationResult m
+validationResultAppend (Valid a) (Valid a')     = Valid (a `mappend` a')
+validationResultAppend (Invalid e) (Invalid e') = Invalid (e `mappend` e')
+validationResultAppend (Valid _) invalid        = invalid
+validationResultAppend invalid (Valid _)        = invalid
+
 
 instance Functor ValidationResult where
   f `fmap` (Valid a) = Valid (f a)

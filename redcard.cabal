@@ -4,16 +4,17 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 15a8c80e2e4a926e7ab3645c30b4fa5aeef122fe6072448ebf29e766f93637e6
+-- hash: 7ef2d905df12db192e932e6a05f7355b0ba0466d6e9f8367f1d758b0ce3dedfe
 
 name:           redcard
-version:        0.2.0.0
+version:        0.2.0.1
 synopsis:       Applicative Validation for JSON & XML
 category:       Data
 author:         Flipstone Technology Partners
 maintainer:     development@flipstone.com
 license:        AllRightsReserved
 license-file:   LICENSE
+tested-with:    GHC == 7.10.3, GHC == 8.6.5
 build-type:     Simple
 
 library
@@ -37,7 +38,7 @@ library
   build-depends:
       aeson
     , aeson-pretty
-    , base >=4.11 && <4.13
+    , base >=4.8 && <4.13
     , bytestring
     , containers
     , convertible
