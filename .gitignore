@@ -4,3 +4,4 @@ cabal.sandbox.config
 .DS_Store
 docker-compose.override.yml
 .stack-work
+test-all-logs
