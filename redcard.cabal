@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7ef2d905df12db192e932e6a05f7355b0ba0466d6e9f8367f1d758b0ce3dedfe
+-- hash: 59d51013be12fd16187fad3cd75c7584e97f0400aec4a82c5dca4b53ee0ad27d
 
 name:           redcard
-version:        0.2.0.1
+version:        0.2.1.0
 synopsis:       Applicative Validation for JSON & XML
 category:       Data
 author:         Flipstone Technology Partners
@@ -26,9 +26,6 @@ library
       Data.Validation.Types.Pure
       Data.Validation.Types.Trans
       Data.Validation.XML
-      Happstack.Aeson
-      Happstack.Aeson.Message
-      Happstack.Aeson.Validation
   other-modules:
       Paths_redcard
   hs-source-dirs:
@@ -42,7 +39,6 @@ library
     , bytestring
     , containers
     , convertible
-    , happstack-server
     , mtl
     , scientific
     , text

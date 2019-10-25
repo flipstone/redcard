@@ -5,3 +5,7 @@ services:
     volumes:
       - .:/redcard
     working_dir: /redcard
+    command:
+      - ./test-loop
+      - stack-lts-13.28.yml
+    tty: true

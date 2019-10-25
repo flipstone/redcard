@@ -9,4 +9,3 @@ import Data.Validation.Aeson
 import Data.Validation.Primitives
 import Data.Validation.Types
 import Data.Validation.XML
-

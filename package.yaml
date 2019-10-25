@@ -1,5 +1,5 @@
 name: redcard
-version: '0.2.0.1'
+version: '0.2.1.0'
 synopsis: Applicative Validation for JSON & XML
 category: Data
 author: Flipstone Technology Partners
@@ -19,7 +19,6 @@ dependencies:
 - bytestring
 - containers
 - convertible
-- happstack-server
 - mtl
 - scientific
 - text
@@ -37,6 +36,3 @@ library:
   - Data.Validation.Types.Pure
   - Data.Validation.Types.Trans
   - Data.Validation.XML
-  - Happstack.Aeson
-  - Happstack.Aeson.Message
-  - Happstack.Aeson.Validation

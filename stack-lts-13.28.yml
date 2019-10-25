@@ -3,7 +3,4 @@ resolver: lts-13.28
 packages:
 - .
 
-extra-deps:
-- happstack-server-7.5.1.3
-
 allow-different-user: true
