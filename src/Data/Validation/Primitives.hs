@@ -1,6 +1,7 @@
 {-# LANGUAGE Rank2Types #-}
 module Data.Validation.Primitives where
 
+import            Control.Monad (join)
 import            Data.Char
 import            Data.Convertible
 import            Data.Foldable
@@ -135,13 +136,16 @@ attrName -: validator = validateAttr attrName required
   where required (Just subvalue) = run validator subvalue
         required Nothing = Invalid (errMessage "must_be_present")
 
-(-:?) :: Text.Text -> Validator a -> Validator (Maybe a)
-attrName -:? validator = validateAttr attrName optional
-  where optional (Just value) = Just <$> run validator value
-        optional Nothing = Valid Nothing
+optional :: Text.Text -> Validator a -> Validator (Maybe a)
+attrName `optional` validator = validateAttr attrName opt
+  where opt (Just value) = Just <$> run validator value
+        opt Nothing = Valid Nothing
+
+optionalAndNullable :: Text.Text -> Validator a -> Validator (Maybe a)
+attrName `optionalAndNullable` validator = join <$> attrName `optional` (nullable validator)
 
 infixr 5 -:
-infixr 5 -:?
+infixr 5 `optional`
 
 notPresent :: Text.Text -> Validator ()
 notPresent attr = validateAttr attr $ isNotPresent
