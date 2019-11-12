@@ -131,7 +131,7 @@ nullable validator =
       either (const Nothing) Just
   <$> (mustBeNull `ifInvalid` validator)
 
-(-:) :: Text.Text -> Validator a -> Validator a
+required :: Text.Text -> Validator a -> Validator a
 attrName -: validator = validateAttr attrName required
   where required (Just subvalue) = run validator subvalue
         required Nothing = Invalid (errMessage "must_be_present")
@@ -144,14 +144,13 @@ attrName `optional` validator = validateAttr attrName opt
 optionalAndNullable :: Text.Text -> Validator a -> Validator (Maybe a)
 attrName `optionalAndNullable` validator = join <$> attrName `optional` (nullable validator)
 
-infixr 5 -:
+infixr 5 `required`
 infixr 5 `optional`
 
 notPresent :: Text.Text -> Validator ()
 notPresent attr = validateAttr attr $ isNotPresent
   where isNotPresent (Just _) = Invalid (errMessage "must_not_be_present")
         isNotPresent Nothing = Valid ()
-
 
 validateAttr :: Text.Text
              -> (forall input. Validatable input => Maybe input -> ValidationResult a)
