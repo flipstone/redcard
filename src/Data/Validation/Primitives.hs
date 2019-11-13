@@ -132,9 +132,9 @@ nullable validator =
   <$> (mustBeNull `ifInvalid` validator)
 
 required :: Text.Text -> Validator a -> Validator a
-attrName -: validator = validateAttr attrName required
-  where required (Just subvalue) = run validator subvalue
-        required Nothing = Invalid (errMessage "must_be_present")
+attrName `required` validator = validateAttr attrName req
+  where req (Just subvalue) = run validator subvalue
+        req Nothing = Invalid (errMessage "must_be_present")
 
 optional :: Text.Text -> Validator a -> Validator (Maybe a)
 attrName `optional` validator = validateAttr attrName opt
