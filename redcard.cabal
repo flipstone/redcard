@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3838862d82e32d834669f97dd022eb6ff9b6579de90bc764488a1b13137ee3c4
+-- hash: c15fe3df927188b7067b1bcbd1ae7d247fb6df08c297d00b7e9891ac060417be
 
 name:           redcard
-version:        0.2.2.1
+version:        0.2.2.2
 synopsis:       Applicative Validation for JSON & XML
 category:       Data
 author:         Flipstone Technology Partners

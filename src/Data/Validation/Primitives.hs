@@ -78,6 +78,9 @@ integer = do
     Just int -> return int
     _ -> fail "must_be_integer"
 
+double :: Validator Double
+double = fromRational . toRational <$> numeric
+
 nonEmpty :: Validator [a] -> Validator [a]
 nonEmpty validator =
   Validator $ \input ->
