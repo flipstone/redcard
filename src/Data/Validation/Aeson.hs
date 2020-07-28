@@ -40,8 +40,8 @@ instance Validatable Value where
   inputText (String text) = Just text
   inputText _ = Nothing
 
-  inputNull Null = Just ()
-  inputNull _ = Nothing
+  inputNull Null = IsNull
+  inputNull _ = NotNull
 
   inputBool (Bool True) = Just True
   inputBool (Bool False) = Just False

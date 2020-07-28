@@ -1,0 +1,1 @@
+To run on specific stack version (13.28 or 6.35) run ./test-loop stack-[version#].yml

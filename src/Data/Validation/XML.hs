@@ -42,8 +42,8 @@ getText (VDoc (Document _ root _)) = getText (VElem root)
 getText (VElem (Element _ _ nodes)) = Just $ childrenText nodes
 getText (VText text) = Just $ text
 
-getNull :: VXML -> Maybe ()
-getNull _ = Nothing
+getNull :: VXML -> CanNull
+getNull _ = InvalidNull "xml_cannot_use_null"
 
 getArray :: VXML -> Maybe (Vec.Vector VXML)
 getArray (VElem (Element _ _ nodes)) =

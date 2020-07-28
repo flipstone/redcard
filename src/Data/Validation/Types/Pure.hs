@@ -13,10 +13,16 @@ newtype Validator a = Validator {
     run :: forall input. Validatable input => input -> ValidationResult a
   }
 
+data CanNull =
+    IsNull
+  | NotNull
+  | InvalidNull Text.Text
+  deriving (Show, Eq)
+
 class Validatable input where
   inputText :: input -> Maybe Text.Text
   inputBool :: input -> Maybe Bool
-  inputNull :: input -> Maybe ()
+  inputNull :: input -> CanNull
   arrayItems :: input -> Maybe (Vec.Vector input)
   scientificNumber :: input -> Maybe Scientific
   lookupChild :: Text.Text -> input -> Lookup input

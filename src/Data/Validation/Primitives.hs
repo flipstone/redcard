@@ -126,13 +126,27 @@ nest attr validator = mapErrors (nestErrors attr) `mapResult` validator
 mustBeNull :: Validator ()
 mustBeNull = Validator $ \input ->
   case inputNull input of
-    Just _ -> Valid ()
-    Nothing -> Invalid (errMessage "must_be_null")
+    IsNull -> Valid ()
+    NotNull -> Invalid (errMessage "must_be_null")
+    InvalidNull text -> Invalid (errMessage text)
 
-nullable :: Validator a -> Validator (Maybe a)
-nullable validator =
+canBeNull :: Validator ()
+canBeNull = Validator $ \input ->
+  case inputNull input of
+    IsNull -> Valid ()
+    NotNull -> Valid ()
+    InvalidNull text -> Invalid (errMessage text)
+
+nullable' :: Validator a -> Validator (Maybe a)
+nullable' validator =
       either (const Nothing) Just
   <$> (mustBeNull `ifInvalid` validator)
+
+nullable :: Validator a -> Validator (Maybe a)
+nullable validator = Validator $ \input ->
+  case run canBeNull input of
+    Valid _ -> run (nullable' validator) input
+    Invalid err -> Invalid err
 
 required :: Text.Text -> Validator a -> Validator a
 attrName `required` validator = validateAttr attrName req
