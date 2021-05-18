@@ -2,6 +2,9 @@
 {-# LANGUAGE Rank2Types #-}
 module Data.Validation.Types.Trans where
 
+#if MIN_VERSION_base(4,12,0)
+import            Control.Monad.Fail (MonadFail(..))
+#endif
 import            Control.Monad.Trans.Class
 
 import qualified  Data.Text as Text

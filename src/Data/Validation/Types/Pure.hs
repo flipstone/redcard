@@ -2,6 +2,9 @@
 {-# LANGUAGE Rank2Types #-}
 module Data.Validation.Types.Pure where
 
+#if MIN_VERSION_base(4,12,0)
+import            Control.Monad.Fail (MonadFail(..))
+#endif
 import            Control.Applicative
 import qualified  Data.Map.Strict as Map
 import qualified  Data.Set as Set
