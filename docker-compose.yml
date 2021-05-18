@@ -1,11 +1,11 @@
 version: '3'
 services:
   dev:
-    image: flipstone/stack:v2-1.9.3
+    image: flipstone/stack:v3-2.5.1
     volumes:
       - .:/redcard
     working_dir: /redcard
     command:
       - ./test-loop
-      - stack-lts-13.28.yml
+      - stack-lts-17.2.yml
     tty: true

@@ -118,6 +118,9 @@ instance Monad Validator where
               Invalid errors -> Invalid errors
               Valid a -> run (f a) input
 
+#if MIN_VERSION_base(4,11,0)
+instance MonadFail Validator where
+#endif
   fail str = Validator $ \_ -> Invalid (errMessage (Text.pack str))
 
 instance Functor Lookup where

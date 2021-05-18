@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE Rank2Types #-}
 module Data.Validation.Types.Trans where
 
@@ -29,6 +30,9 @@ instance Monad m => Monad (ValidatorT m) where
       Valid a -> runValidatorT (f a) input
       Invalid errs -> pure (Invalid errs)
 
+#if MIN_VERSION_base(4,11,0)
+instance Monad m => MonadFail (ValidatorT m) where
+#endif
   fail str = ValidatorT $ \_ -> pure $ Invalid (errMessage (Text.pack str))
 
 instance MonadTrans ValidatorT where

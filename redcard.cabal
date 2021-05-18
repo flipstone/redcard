@@ -1,13 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c15fe3df927188b7067b1bcbd1ae7d247fb6df08c297d00b7e9891ac060417be
+-- hash: 9db7a65e23df6bf5ec27a2c8456cf85e6735e5af5aa9cc070c963fce8c3506a6
 
 name:           redcard
-version:        0.2.2.2
+version:        0.2.4.0
 synopsis:       Applicative Validation for JSON & XML
 category:       Data
 author:         Flipstone Technology Partners
@@ -35,7 +35,7 @@ library
   build-depends:
       aeson
     , aeson-pretty
-    , base >=4.8 && <4.13
+    , base >=4.8
     , bytestring
     , containers
     , convertible

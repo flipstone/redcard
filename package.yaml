@@ -1,5 +1,5 @@
 name: redcard
-version: '0.2.2.3'
+version: '0.2.4.0'
 synopsis: Applicative Validation for JSON & XML
 category: Data
 author: Flipstone Technology Partners
@@ -13,7 +13,7 @@ ghc-options:
 - -Werror
 - -fno-warn-orphans
 dependencies:
-- base >=4.8 && <4.13
+- base >=4.8
 - aeson
 - aeson-pretty
 - bytestring
