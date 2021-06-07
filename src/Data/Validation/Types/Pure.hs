@@ -2,7 +2,9 @@
 {-# LANGUAGE Rank2Types #-}
 module Data.Validation.Types.Pure where
 
-#if MIN_VERSION_base(4,12,0)
+-- https://wiki.haskell.org/MonadFail_Proposal
+-- GHC 8.8 (base 4.13): "Fail is now a redundant module"
+#if MIN_VERSION_base(4,12,0) && !MIN_VERSION_base(4,13,0)
 import            Control.Monad.Fail (MonadFail(..))
 #endif
 import            Control.Applicative
