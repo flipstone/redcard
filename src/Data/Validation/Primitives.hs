@@ -1,13 +1,18 @@
-{-# LANGUAGE Rank2Types #-}
+{-# LANGUAGE Rank2Types, ScopedTypeVariables #-}
 module Data.Validation.Primitives where
 
 import            Control.Monad (join)
 import            Data.Char
 import            Data.Convertible
 import            Data.Foldable
+import            Data.List (sortOn)
+import            Data.Ord (Down(Down))
 import            Data.Scientific
+import qualified  Data.List.NonEmpty as NonEmpty
 import qualified  Data.Text as Text
 import qualified  Data.Vector as Vec
+import qualified  Data.Map as Map
+import qualified  Data.Set as Set
 
 import            Data.Validation.Types
 
@@ -88,14 +93,54 @@ nonEmpty validator =
     Valid [] -> Invalid (errMessage $ Text.pack ("must_have_at_least_one_in_list"))
     result -> result
 
-arrayOf :: Validator a -> Validator [a]
-arrayOf validator =
+foldableOf :: (Applicative f, Foldable f, Monoid (f a)) => Validator a -> Validator (f a)
+foldableOf validator =
   Validator $ \input ->
     case arrayItems input of
       Just items ->
         let itemValidator = runIndexed (pure <$> validator)
         in fold (Vec.imap itemValidator items)
       _ -> Invalid (errMessage "must_be_array")
+
+arrayOf :: Validator a -> Validator [a]
+arrayOf = foldableOf
+
+nonEmptyOf :: Validator a -> Validator (NonEmpty.NonEmpty a)
+nonEmptyOf validator =
+  NonEmpty.fromList <$> nonEmpty (arrayOf validator)
+
+setIgnoringDuplicatesOf :: (Ord a) => Validator a -> Validator (Set.Set a)
+setIgnoringDuplicatesOf validator =
+  Set.fromList <$> arrayOf validator
+
+-- | Returns Invalid if the input contains the same element more than once.
+-- | WARNING: Does not report duplicate elements if validator does not
+-- |          pass on every element.
+setRejectingDuplicatesOf :: forall a. (Ord a, Show a) => Validator a -> Validator (Set.Set a)
+setRejectingDuplicatesOf validator = do
+  list <- arrayOf validator
+  let
+    withOnes = [(c :: a, 1) | c <- list]
+    valueToFreq = Map.fromListWith (+) withOnes
+
+    sortBySndDescending = map (fmap (\(Down x) -> x)) . sortOn snd . map (fmap Down)
+
+    sortedByFreq :: [(a, Int)]
+    sortedByFreq = sortBySndDescending $ Map.toList valueToFreq
+
+    duplicates :: [(a, Int)]
+    duplicates = takeWhile ((> 1) . snd) sortedByFreq
+
+    errs :: [Text.Text]
+    errs = map makeSetErr duplicates
+
+  if length errs /= 0
+    then Validator $ \_ -> Invalid $ Messages $ Set.fromList errs
+    else pure $ Set.fromList list
+
+makeSetErr :: Show a => (a, Int) -> Text.Text
+makeSetErr (value, occurrances) =
+  Text.pack $ "duplicate_element_in_array_validated_as_set: " ++ show value ++ " occurs " ++ show occurrances ++ " times"
 
 ifInvalid :: Validator a
           -> Validator b
