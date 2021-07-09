@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9db7a65e23df6bf5ec27a2c8456cf85e6735e5af5aa9cc070c963fce8c3506a6
+-- hash: 9d2e2449e14e66af6dc0e2f62b06767b17edef15902b1377892561e817ef26d5
 
 name:           redcard
 version:        0.2.4.0
@@ -40,6 +40,32 @@ library
     , containers
     , convertible
     , mtl
+    , scientific
+    , text
+    , transformers
+    , unordered-containers
+    , vector
+    , xml-conduit
+  default-language: Haskell2010
+
+test-suite redcard-test
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_redcard
+  hs-source-dirs:
+      test
+  default-extensions: OverloadedStrings
+  ghc-options: -Wall -Werror -fno-warn-orphans -main-is Main
+  build-depends:
+      aeson
+    , aeson-pretty
+    , base >=4.8
+    , bytestring
+    , containers
+    , convertible
+    , mtl
+    , redcard
     , scientific
     , text
     , transformers

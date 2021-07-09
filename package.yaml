@@ -36,3 +36,8 @@ library:
   - Data.Validation.Types.Pure
   - Data.Validation.Types.Trans
   - Data.Validation.XML
+tests:
+  redcard-test:
+    source-dirs: test
+    main: Main
+    dependencies: redcard
