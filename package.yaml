@@ -5,12 +5,18 @@ category: Data
 author: Flipstone Technology Partners
 maintainer: development@flipstone.com
 license: AllRightsReserved
-tested-with: GHC == 7.10.3, GHC == 8.6.5
+tested-with: GHC == 8.6.5, GHC == 9.0.1
 default-extensions:
 - OverloadedStrings
 ghc-options:
 - -Wall
 - -Werror
+- -Wcpp-undef
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wpartial-fields
+- -Wredundant-constraints
 - -fno-warn-orphans
 dependencies:
 - base >=4.8
