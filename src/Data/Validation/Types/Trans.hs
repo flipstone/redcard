@@ -1,10 +1,14 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE Rank2Types #-}
-module Data.Validation.Types.Trans where
+module Data.Validation.Types.Trans
+  ( ValidatorT(..)
+  , liftV
+  )
+  where
 
 -- https://wiki.haskell.org/MonadFail_Proposal
 -- GHC 8.8 (base 4.13): "Fail is now a redundant module"
-#if MIN_VERSION_base(4,12,0) && !MIN_VERSION_base(4,13,0)
+#if !MIN_VERSION_base(4,13,0)
 import            Control.Monad.Fail (MonadFail(..))
 #endif
 import            Control.Monad.Trans.Class
@@ -34,11 +38,15 @@ instance Monad m => Monad (ValidatorT m) where
     case result of
       Valid a -> runValidatorT (f a) input
       Invalid errs -> pure (Invalid errs)
-
-#if MIN_VERSION_base(4,11,0)
-instance Monad m => MonadFail (ValidatorT m) where
+#if !MIN_VERSION_base(4,13,0)
+  fail = internalFail
 #endif
-  fail str = ValidatorT $ \_ -> pure $ Invalid (errMessage (Text.pack str))
+
+internalFail :: Applicative a => [Char] -> ValidatorT a b
+internalFail str = ValidatorT $ \_ -> pure $ Invalid (errMessage (Text.pack str))
+
+instance Monad m => MonadFail (ValidatorT m) where
+  fail = internalFail
 
 instance MonadTrans ValidatorT where
   lift ma = ValidatorT (const (Valid <$> ma))

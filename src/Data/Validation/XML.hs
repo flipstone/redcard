@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 module Data.Validation.XML
   ( decodeValidXML )
   where
@@ -120,10 +119,8 @@ parseBool text =
 data Content = Content Text.Text
              | NotContent
 
-#if MIN_VERSION_base(4,11,0)
 instance Semigroup Content where
   (<>) = contentAppend
-#endif
 
 instance Monoid Content where
   mempty = Content ""
