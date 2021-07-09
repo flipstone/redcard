@@ -1,0 +1,72 @@
+# Haskell stack project Github Actions template
+# https://gist.github.com/mstksg/11f753d891cee5980326a8ea8c865233
+#
+# TODO:
+# * cache (https://github.com/actions/cache)
+#     but this is too small. native cacheing will come soon
+#     https://github.community/t5/GitHub-Actions/Caching-files-between-GitHub-Action-executions/m-p/30974/highlight/true#M630
+#     so we can wait for then.
+
+name: Redcard CI
+
+on:
+  push:
+  schedule:
+  - cron: "0 0 * * 1"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # use this to specify what resolvers and ghc to use
+        plan:
+        - { build: stack, resolver: "--stack-yaml stack-lts-13.28.yml"  }
+        - { build: stack, resolver: "--stack-yaml stack-lts-17.2.yml"  }
+        - { build: stack, resolver: "--stack-yaml stack-lts-17.2.yml --resolver nightly"  }
+        # use this to include any dependencies from OS package managers
+        include: []
+        # - os: ubuntu-latest
+        #   apt-get: happy libblas-dev liblapack-dev
+
+        #exclude:
+        #- os: macOS-latest
+        #  plan:
+        #    build: cabal
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Install OS Packages
+      uses: mstksg/get-package@v1
+      with:
+        apt-get: ${{ matrix.apt-get }}
+    - uses: actions/checkout@v1
+
+    - name: Setup stack
+      uses: haskell/actions/setup@v1.2.3
+
+    - name: Install dependencies
+      run: |
+        set -ex
+        case "$BUILD" in
+          stack)
+            stack --no-terminal --install-ghc $ARGS test --only-dependencies
+            ;;
+        esac
+        set +ex
+      env:
+        ARGS: ${{ matrix.plan.resolver }}
+        BUILD: ${{ matrix.plan.build }}
+
+    - name: Build
+      run: |
+        set -ex
+        case "$BUILD" in
+          stack)
+            stack --no-terminal $ARGS test
+            ;;
+        esac
+        set +ex
+      env:
+        ARGS: ${{ matrix.plan.resolver }}
+        BUILD: ${{ matrix.plan.build }}
