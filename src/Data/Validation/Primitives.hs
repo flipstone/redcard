@@ -93,7 +93,7 @@ nonEmpty validator =
     Valid [] -> Invalid (errMessage $ Text.pack ("must_have_at_least_one_in_list"))
     result -> result
 
-foldableOf :: (Applicative f, Foldable f, Monoid (f a)) => Validator a -> Validator (f a)
+foldableOf :: (Applicative f, Monoid (f a)) => Validator a -> Validator (f a)
 foldableOf validator =
   Validator $ \input ->
     case arrayItems input of

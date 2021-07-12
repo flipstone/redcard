@@ -1,10 +1,23 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE Rank2Types #-}
-module Data.Validation.Types.Pure where
+module Data.Validation.Types.Pure
+  ( CanNull(..)
+  , Validator(..)
+  , Validatable(..)
+  , Lookup(..)
+  , ValidationResult(..)
+  , Errors(..)
+  , errMessage
+  , nestErrors
+  , mapResult
+  , mapErrors
+  , errorsAppend
+  , validationResultAppend
+  ) where
 
 -- https://wiki.haskell.org/MonadFail_Proposal
 -- GHC 8.8 (base 4.13): "Fail is now a redundant module"
-#if MIN_VERSION_base(4,12,0) && !MIN_VERSION_base(4,13,0)
+#if !MIN_VERSION_base(4,13,0)
 import            Control.Monad.Fail (MonadFail(..))
 #endif
 import            Control.Applicative
@@ -62,10 +75,8 @@ mapErrors f (Invalid errs) = Invalid (f errs)
 mapErrors _ valid = valid
 
 -- Instances
-#if MIN_VERSION_base(4,11,0)
 instance Semigroup Errors where
   (<>) = errorsAppend
-#endif
 
 instance Monoid Errors where
   mempty = Messages Set.empty
@@ -79,10 +90,8 @@ errorsAppend (Group g) (Group g')       = Group (Map.unionWith mappend g g')
 errorsAppend g m@(Messages _)           = g `mappend` nestErrors "" m
 errorsAppend m g                        = nestErrors "" m `mappend` g
 
-#if MIN_VERSION_base(4,11,0)
 instance Monoid a => Semigroup (ValidationResult a) where
   (<>) = validationResultAppend
-#endif
 
 instance Monoid a => Monoid (ValidationResult a) where
   mempty = Valid mempty
@@ -122,11 +131,15 @@ instance Monad Validator where
               case run v input of
               Invalid errors -> Invalid errors
               Valid a -> run (f a) input
-
-#if MIN_VERSION_base(4,11,0)
-instance MonadFail Validator where
+#if !MIN_VERSION_base(4,13,0)
+  fail = internalFail
 #endif
-  fail str = Validator $ \_ -> Invalid (errMessage (Text.pack str))
+
+internalFail :: [Char] -> Validator a
+internalFail str = Validator $ \_ -> Invalid (errMessage (Text.pack str))
+
+instance MonadFail Validator where
+  fail = internalFail
 
 instance Functor Lookup where
   fmap _ InvalidLookup = InvalidLookup

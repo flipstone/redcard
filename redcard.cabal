@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9d2e2449e14e66af6dc0e2f62b06767b17edef15902b1377892561e817ef26d5
+-- hash: 2030140e25d0a3fc9d39fc16d020759dfbed5637e908343e94320b746f64271f
 
 name:           redcard
 version:        0.2.4.0
@@ -14,7 +14,7 @@ author:         Flipstone Technology Partners
 maintainer:     development@flipstone.com
 license:        AllRightsReserved
 license-file:   LICENSE
-tested-with:    GHC == 7.10.3, GHC == 8.6.5
+tested-with:    GHC == 8.6.5, GHC == 9.0.1
 build-type:     Simple
 
 library
@@ -31,7 +31,7 @@ library
   hs-source-dirs:
       src
   default-extensions: OverloadedStrings
-  ghc-options: -Wall -Werror -fno-warn-orphans
+  ghc-options: -Wall -Werror -Wcpp-undef -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -fno-warn-orphans
   build-depends:
       aeson
     , aeson-pretty
@@ -56,7 +56,7 @@ test-suite redcard-test
   hs-source-dirs:
       test
   default-extensions: OverloadedStrings
-  ghc-options: -Wall -Werror -fno-warn-orphans -main-is Main
+  ghc-options: -Wall -Werror -Wcpp-undef -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -fno-warn-orphans -main-is Main
   build-depends:
       aeson
     , aeson-pretty
