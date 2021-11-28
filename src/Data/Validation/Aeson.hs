@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module Data.Validation.Aeson where
 
 import            Control.Monad.Identity
@@ -5,7 +6,12 @@ import            Control.Monad.Identity
 import            Data.Aeson
 import qualified  Data.ByteString as BS
 import qualified  Data.ByteString.Lazy as LazyBS
+#if MIN_VERSION_aeson(2,0,0)
+import qualified  Data.Aeson.Key as Key
+import qualified  Data.Aeson.KeyMap as KeyMap
+#else
 import qualified  Data.HashMap.Strict as HashMap
+#endif
 import qualified  Data.Map.Strict as Map
 import qualified  Data.Set as Set
 import qualified  Data.Text as Text
@@ -54,7 +60,11 @@ instance Validatable Value where
   scientificNumber _ = Nothing
 
   lookupChild attrName (Object hmap) = LookupResult $
+#if MIN_VERSION_aeson(2,0,0)
+                                       KeyMap.lookup (Key.fromText attrName) hmap
+#else
                                        HashMap.lookup attrName hmap
+#endif
   lookupChild _ _ = InvalidLookup
 
 instance ToJSON Errors where
@@ -65,8 +75,15 @@ instance ToJSON Errors where
                         $ set
 
   toJSON (Group attrs) = Object
+#if MIN_VERSION_aeson(2,0,0)
+                       . KeyMap.fromList
+#else
                        . HashMap.fromList
+#endif
                        . Map.toList
+#if MIN_VERSION_aeson(2,0,0)
+                       . Map.mapKeys Key.fromText
+#endif
                        . Map.map toJSON
                        $ attrs
 

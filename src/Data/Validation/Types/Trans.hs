@@ -32,7 +32,7 @@ instance Applicative m => Applicative (ValidatorT m) where
     (fmap (<*>) (mf input)) <*> ma input
 
 instance Monad m => Monad (ValidatorT m) where
-  return a = ValidatorT (const (return (pure a)))
+  return = pure
   (ValidatorT ma) >>= f = ValidatorT $ \input -> do
     result <- ma input
     case result of

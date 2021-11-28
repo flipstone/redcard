@@ -80,7 +80,7 @@ instance Semigroup Errors where
 
 instance Monoid Errors where
   mempty = Messages Set.empty
-  mappend = errorsAppend
+  mappend = (<>)
 
 errorsAppend :: Errors
              -> Errors
@@ -95,7 +95,7 @@ instance Monoid a => Semigroup (ValidationResult a) where
 
 instance Monoid a => Monoid (ValidationResult a) where
   mempty = Valid mempty
-  mappend = validationResultAppend
+  mappend = (<>)
 
 validationResultAppend :: Monoid m
                        => ValidationResult m

@@ -124,7 +124,7 @@ instance Semigroup Content where
 
 instance Monoid Content where
   mempty = Content ""
-  mappend = contentAppend
+  mappend = (<>)
 
 contentAppend :: Content
               -> Content
