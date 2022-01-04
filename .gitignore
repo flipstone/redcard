@@ -5,3 +5,4 @@ cabal.sandbox.config
 docker-compose.override.yml
 .stack-work
 test-all-logs
+redcard.cabal
