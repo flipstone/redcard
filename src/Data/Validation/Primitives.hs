@@ -150,6 +150,9 @@ ifInvalid validA validB = Validator $ \input ->
   Valid a -> Valid (Left a)
   Invalid _ -> Right <$> run validB input
 
+firstValid :: Validator a -> Validator a -> Validator a
+firstValid v1 v2 = either id id <$> ifInvalid v1 v2
+
 validConversion :: Convertible a b => Validator a -> Validator b
 validConversion validator = do
   a <- validator
