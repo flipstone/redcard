@@ -6,6 +6,7 @@ import            Data.Char
 import            Data.Convertible
 import            Data.Foldable
 import            Data.List (sortOn)
+import qualified  Data.List.NonEmpty as NE
 import            Data.Ord (Down(Down))
 import            Data.Scientific
 import qualified  Data.List.NonEmpty as NonEmpty
@@ -152,6 +153,9 @@ ifInvalid validA validB = Validator $ \input ->
 
 firstValid :: Validator a -> Validator a -> Validator a
 firstValid v1 v2 = either id id <$> ifInvalid v1 v2
+
+foldUntilValid :: NE.NonEmpty (Validator a) -> Validator a
+foldUntilValid = foldl1 firstValid
 
 validConversion :: Convertible a b => Validator a -> Validator b
 validConversion validator = do
