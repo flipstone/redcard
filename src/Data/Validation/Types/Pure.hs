@@ -25,6 +25,7 @@ import qualified  Data.Map.Strict as Map
 import qualified  Data.Set as Set
 import            Data.Scientific
 import qualified  Data.Text as Text
+import            Data.Typeable (Typeable)
 import qualified  Data.Vector as Vec
 
 newtype Validator a = Validator {
@@ -37,7 +38,7 @@ data CanNull =
   | InvalidNull Text.Text
   deriving (Show, Eq)
 
-class Validatable input where
+class Typeable input => Validatable input where
   inputText :: input -> Maybe Text.Text
   inputBool :: input -> Maybe Bool
   inputNull :: input -> CanNull
