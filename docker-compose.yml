@@ -1,11 +1,18 @@
-version: '3'
 services:
   dev:
-    image: flipstone/stack:v4-2.7.1
+    image: ghcr.io/flipstone/haskell-tools:debian-unstable-ghc-9.2.7-2023-06-21-4bf5abf
+    environment:
+      STACK_ROOT: /stack-root
+      IN_DEV_CONTAINER: 'true'
+      # Pass through the CI variable from GitHub (or set it to `true` locally
+      # for debugging CI builds)
+      CI:
     volumes:
-      - .:/redcard
-    working_dir: /redcard
-    command:
-      - ./test-loop
-      - stack-lts-17.2.yml
+      - .:${PROJECT_DIR}
+      - flipstone_stack_root:/stack-root
+    working_dir: ${PROJECT_DIR}
     tty: true
+
+volumes:
+  flipstone_stack_root:
+    external: true

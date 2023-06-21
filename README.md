@@ -1,1 +1,8 @@
-To run on specific stack version (13.28 or 17.2) run ./test-loop stack-[version#].yml
+# Redcard
+
+## Building
+
+Prior to building the first time, you'll need to run `./scripts/bootstrap`
+
+
+After running bootstrap, you can then run `./scripts/build`

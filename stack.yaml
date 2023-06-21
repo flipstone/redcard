@@ -1,0 +1,8 @@
+resolver: lts-20.24
+system-ghc: true
+install-ghc: false
+
+packages:
+- .
+
+allow-different-user: true

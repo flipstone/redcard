@@ -1,6 +1,0 @@
-resolver: lts-17.2
-
-packages:
-- .
-
-allow-different-user: true

@@ -5,7 +5,6 @@ category: Data
 author: Flipstone Technology Partners
 maintainer: development@flipstone.com
 license: AllRightsReserved
-tested-with: GHC == 8.6.5, GHC == 9.0.1
 default-extensions:
 - OverloadedStrings
 ghc-options:
