@@ -14,7 +14,7 @@ import            Text.XML
 
 import            Data.Validation.Types
 
-decodeValidXML :: Validator a -> LazyBS.ByteString -> ValidationResult a
+decodeValidXML :: Validator VXML a -> LazyBS.ByteString -> ValidationResult a
 decodeValidXML validator input =
   case parseLBS def input of
   Left err -> Invalid (errMessage $ Text.pack (show err))

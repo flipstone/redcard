@@ -28,8 +28,8 @@ import qualified  Data.Text as Text
 import            Data.Typeable (Typeable)
 import qualified  Data.Vector as Vec
 
-newtype Validator a = Validator {
-    run :: forall input. Validatable input => input -> ValidationResult a
+newtype Validator input a = Validator {
+    run :: input -> ValidationResult a
   }
 
 data CanNull =
@@ -68,7 +68,7 @@ nestErrors :: Text.Text -> Errors -> Errors
 nestErrors attr err = Group (Map.singleton attr err)
 
 mapResult :: (ValidationResult a -> ValidationResult b)
-          -> Validator a -> Validator b
+          -> Validator input a -> Validator input b
 mapResult f v = Validator $ \value -> f (run v value)
 
 mapErrors :: (Errors -> Errors) -> ValidationResult a -> ValidationResult a
@@ -120,14 +120,14 @@ instance Applicative ValidationResult where
   Invalid errs <*> _ = Invalid errs
   _ <*> Invalid errs = Invalid errs
 
-instance Functor Validator where
+instance Functor (Validator input) where
   f `fmap` v = mapResult (fmap f) v
 
-instance Applicative Validator where
+instance Applicative (Validator input) where
   pure a = Validator (const (pure a))
   v <*> v' = Validator $ \value -> run v value <*> run v' value
 
-instance Monad Validator where
+instance Monad (Validator input) where
   v >>= f = Validator $ \input ->
               case run v input of
               Invalid errors -> Invalid errors
@@ -136,10 +136,10 @@ instance Monad Validator where
   fail = internalFail
 #endif
 
-internalFail :: [Char] -> Validator a
+internalFail :: [Char] -> Validator input a
 internalFail str = Validator $ \_ -> Invalid (errMessage (Text.pack str))
 
-instance MonadFail Validator where
+instance MonadFail (Validator input) where
   fail = internalFail
 
 instance Functor Lookup where

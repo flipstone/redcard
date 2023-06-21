@@ -19,23 +19,27 @@ import qualified  Data.Vector as Vec
 
 import            Data.Validation.Types
 
-decodeValidJSON :: Validator a -> LazyBS.ByteString -> ValidationResult a
+decodeValidJSON :: Validator Value a -> LazyBS.ByteString -> ValidationResult a
 decodeValidJSON validator input =
   runIdentity (decodeValidJSONT (liftV validator) input)
 
-decodeValidJSONStrict :: Validator a -> BS.ByteString -> ValidationResult a
+decodeValidJSONStrict :: Validator Value a -> BS.ByteString -> ValidationResult a
 decodeValidJSONStrict validator input =
   runIdentity (decodeValidJSONStrictT (liftV validator) input)
 
 decodeValidJSONT :: Applicative m
-                 => ValidatorT m a -> LazyBS.ByteString -> m (ValidationResult a)
+                 => ValidatorT Value m a
+                 -> LazyBS.ByteString
+                 -> m (ValidationResult a)
 decodeValidJSONT validator input =
   case eitherDecode input of
   Left err -> pure $ Invalid (errMessage $ Text.pack err)
   Right value -> runValidatorT validator (value :: Value)
 
 decodeValidJSONStrictT :: Applicative m
-                       => ValidatorT m a -> BS.ByteString -> m (ValidationResult a)
+                       => ValidatorT Value m a
+                       -> BS.ByteString
+                       -> m (ValidationResult a)
 decodeValidJSONStrictT validator input =
   case eitherDecodeStrict input of
   Left err -> pure $ Invalid (errMessage $ Text.pack err)

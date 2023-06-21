@@ -1,11 +1,10 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 import Data.Validation
 import Data.Aeson
 
-rejectsAll :: ValidatorT IO Int
+rejectsAll :: ValidatorT input IO Int
 rejectsAll = liftV $ Validator $ const $ Invalid (errMessage "I reject everything!")
 
-rejectsAllUsingFail :: ValidatorT IO Int
+rejectsAllUsingFail :: ValidatorT input IO Int
 rejectsAllUsingFail = liftV $ fail "Validator fail message which shouldn't be IO's fail"
 
 emptyJSON :: Value
