@@ -18,7 +18,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [self-hosted, linux, x64]
         # use this to specify what resolvers and ghc to use
         plan:
         - { build: stack, resolver: "--stack-yaml stack-lts-13.28.yml"  }
