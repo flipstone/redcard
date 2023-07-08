@@ -6,3 +6,4 @@ docker-compose.override.yml
 .stack-work
 test-all-logs
 dist-newstyle
+.env
