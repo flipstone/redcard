@@ -23,7 +23,7 @@ decodeValidJSONStrict validator input =
     runIdentity (decodeValidJSONStrictT (liftV validator) input)
 
 decodeValidJSONT ::
-    Applicative m =>
+    (Applicative m) =>
     ValidatorT Value m a ->
     LazyBS.ByteString ->
     m (ValidationResult a)
@@ -33,7 +33,7 @@ decodeValidJSONT validator input =
         Right value -> runValidatorT validator (value :: Value)
 
 decodeValidJSONStrictT ::
-    Applicative m =>
+    (Applicative m) =>
     ValidatorT Value m a ->
     BS.ByteString ->
     m (ValidationResult a)

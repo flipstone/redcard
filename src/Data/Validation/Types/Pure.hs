@@ -33,7 +33,7 @@ data CanNull
     | InvalidNull Text.Text
     deriving (Show, Eq)
 
-class Typeable input => Validatable input where
+class (Typeable input) => Validatable input where
     inputText :: input -> Maybe Text.Text
     inputBool :: input -> Maybe Bool
     inputNull :: input -> CanNull
@@ -90,15 +90,15 @@ errorsAppend (Group g) (Group g') = Group (Map.unionWith mappend g g')
 errorsAppend g m@(Messages _) = g `mappend` nestErrors "" m
 errorsAppend m g = nestErrors "" m `mappend` g
 
-instance Monoid a => Semigroup (ValidationResult a) where
+instance (Monoid a) => Semigroup (ValidationResult a) where
     (<>) = validationResultAppend
 
-instance Monoid a => Monoid (ValidationResult a) where
+instance (Monoid a) => Monoid (ValidationResult a) where
     mempty = Valid mempty
     mappend = (<>)
 
 validationResultAppend ::
-    Monoid m =>
+    (Monoid m) =>
     ValidationResult m ->
     ValidationResult m ->
     ValidationResult m

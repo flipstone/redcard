@@ -21,7 +21,7 @@ import Data.Validation.Types
 liftResult :: ValidationResult a -> Validator input a
 liftResult result = Validator (const result)
 
-validRead :: Validatable input => String -> ReadS a -> Validator input a
+validRead :: (Validatable input) => String -> ReadS a -> Validator input a
 validRead err reader = do
     text <- string
 
@@ -29,7 +29,7 @@ validRead err reader = do
         [(value, "")] -> pure value
         _ -> fail err
 
-bool :: Validatable input => Validator input Bool
+bool :: (Validatable input) => Validator input Bool
 bool =
     Validator $ \input ->
         case inputBool input of
@@ -37,7 +37,7 @@ bool =
             Just False -> Valid False
             _ -> Invalid (errMessage "must_be_bool")
 
-string :: Validatable input => Validator input Text.Text
+string :: (Validatable input) => Validator input Text.Text
 string =
     Validator $ \input ->
         case inputText input of
@@ -72,7 +72,7 @@ exactly len validator =
             Valid t | Text.length t /= len -> Invalid (errMessage $ Text.pack ("must_be_length_" ++ show len))
             result -> result
 
-numeric :: Validatable input => Validator input Scientific
+numeric :: (Validatable input) => Validator input Scientific
 numeric = Validator $ \input ->
     case scientificNumber input of
         Just n -> Valid n
@@ -85,7 +85,7 @@ integer = do
         Just int -> return int
         _ -> fail "must_be_integer"
 
-double :: Validatable input => Validator input Double
+double :: (Validatable input) => Validator input Double
 double = fromRational . toRational <$> numeric
 
 nonEmpty :: Validator input [a] -> Validator input [a]
@@ -107,10 +107,10 @@ foldableOf validator =
                  in fold (Vec.imap itemValidator items)
             _ -> Invalid (errMessage "must_be_array")
 
-arrayOf :: Validatable input => Validator input a -> Validator input [a]
+arrayOf :: (Validatable input) => Validator input a -> Validator input [a]
 arrayOf = foldableOf
 
-nonEmptyOf :: Validatable input => Validator input a -> Validator input (NonEmpty.NonEmpty a)
+nonEmptyOf :: (Validatable input) => Validator input a -> Validator input (NonEmpty.NonEmpty a)
 nonEmptyOf validator =
     NonEmpty.fromList <$> nonEmpty (arrayOf validator)
 
@@ -151,7 +151,7 @@ setRejectingDuplicatesOf validator = do
         then Validator $ \_ -> Invalid $ Messages $ Set.fromList errs
         else pure $ Set.fromList list
 
-makeSetErr :: Show a => (a, Int) -> Text.Text
+makeSetErr :: (Show a) => (a, Int) -> Text.Text
 makeSetErr (value, occurrances) =
     Text.pack $ "duplicate_element_in_array_validated_as_set: " ++ show value ++ " occurs " ++ show occurrances ++ " times"
 
@@ -170,7 +170,7 @@ firstValid v1 v2 = either id id <$> ifInvalid v1 v2
 foldUntilValid :: NE.NonEmpty (Validator input a) -> Validator input a
 foldUntilValid = foldl1 firstValid
 
-validConversion :: Convertible a b => Validator input a -> Validator input b
+validConversion :: (Convertible a b) => Validator input a -> Validator input b
 validConversion validator = do
     a <- validator
 
@@ -191,57 +191,57 @@ nestIndex = nest . Text.pack . show
 nest :: Text.Text -> Validator input a -> Validator input a
 nest attr validator = mapErrors (nestErrors attr) `mapResult` validator
 
-mustBeNull :: Validatable input => Validator input ()
+mustBeNull :: (Validatable input) => Validator input ()
 mustBeNull = Validator $ \input ->
     case inputNull input of
         IsNull -> Valid ()
         NotNull -> Invalid (errMessage "must_be_null")
         InvalidNull text -> Invalid (errMessage text)
 
-canBeNull :: Validatable input => Validator input ()
+canBeNull :: (Validatable input) => Validator input ()
 canBeNull = Validator $ \input ->
     case inputNull input of
         IsNull -> Valid ()
         NotNull -> Valid ()
         InvalidNull text -> Invalid (errMessage text)
 
-nullable' :: Validatable input => Validator input a -> Validator input (Maybe a)
+nullable' :: (Validatable input) => Validator input a -> Validator input (Maybe a)
 nullable' validator =
     either (const Nothing) Just
         <$> (mustBeNull `ifInvalid` validator)
 
-nullable :: Validatable input => Validator input a -> Validator input (Maybe a)
+nullable :: (Validatable input) => Validator input a -> Validator input (Maybe a)
 nullable validator = Validator $ \input ->
     case run canBeNull input of
         Valid _ -> run (nullable' validator) input
         Invalid err -> Invalid err
 
-required :: Validatable input => Text.Text -> Validator input a -> Validator input a
+required :: (Validatable input) => Text.Text -> Validator input a -> Validator input a
 attrName `required` validator = validateAttr attrName req
   where
     req (Just subvalue) = run validator subvalue
     req Nothing = Invalid (errMessage "must_be_present")
 
-optional :: Validatable input => Text.Text -> Validator input a -> Validator input (Maybe a)
+optional :: (Validatable input) => Text.Text -> Validator input a -> Validator input (Maybe a)
 attrName `optional` validator = validateAttr attrName opt
   where
     opt (Just value) = Just <$> run validator value
     opt Nothing = Valid Nothing
 
-optionalAndNullable :: Validatable input => Text.Text -> Validator input a -> Validator input (Maybe a)
+optionalAndNullable :: (Validatable input) => Text.Text -> Validator input a -> Validator input (Maybe a)
 attrName `optionalAndNullable` validator = join <$> attrName `optional` nullable validator
 
 infixr 5 `required`
 infixr 5 `optional`
 
-notPresent :: Validatable input => Text.Text -> Validator input ()
+notPresent :: (Validatable input) => Text.Text -> Validator input ()
 notPresent attr = validateAttr attr $ isNotPresent
   where
     isNotPresent (Just _) = Invalid (errMessage "must_not_be_present")
     isNotPresent Nothing = Valid ()
 
 validateAttr ::
-    Validatable input =>
+    (Validatable input) =>
     Text.Text ->
     (Maybe input -> ValidationResult a) ->
     Validator input a
