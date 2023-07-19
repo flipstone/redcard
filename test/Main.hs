@@ -12,9 +12,9 @@ emptyJSON = toJSON ("" :: String)
 
 main :: IO ()
 main = do
-    -- Just verify that they do not throw
-    result1 <- runValidatorT rejectsAll emptyJSON
-    print result1
-    result2 <- runValidatorT rejectsAllUsingFail emptyJSON
-    print result2
-    pure ()
+  -- Just verify that they do not throw
+  result1 <- runValidatorT rejectsAll emptyJSON
+  print result1
+  result2 <- runValidatorT rejectsAllUsingFail emptyJSON
+  print result2
+  pure ()
