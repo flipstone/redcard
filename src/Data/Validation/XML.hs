@@ -1,4 +1,7 @@
-module Data.Validation.XML (decodeValidXML)
+module Data.Validation.XML
+  ( decodeValidXML
+  , VXML (..)
+  )
 where
 
 import Control.Applicative
