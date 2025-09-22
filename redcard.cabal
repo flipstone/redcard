@@ -29,7 +29,7 @@ library
       src
   default-extensions:
       OverloadedStrings
-  ghc-options: -Wall -Werror -Wcpp-undef -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -fno-warn-orphans
+  ghc-options: -Wall -Wcompat -Werror -Wcpp-undef -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wterm-variable-capture -Wextended-warnings -fno-warn-orphans
   build-depends:
       aeson
     , aeson-pretty
@@ -55,7 +55,7 @@ test-suite redcard-test
       test
   default-extensions:
       OverloadedStrings
-  ghc-options: -Wall -Werror -Wcpp-undef -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -fno-warn-orphans -main-is Main
+  ghc-options: -Wall -Wcompat -Werror -Wcpp-undef -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wterm-variable-capture -Wextended-warnings -fno-warn-orphans -main-is Main
   build-depends:
       aeson
     , aeson-pretty

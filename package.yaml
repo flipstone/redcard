@@ -9,6 +9,7 @@ default-extensions:
 - OverloadedStrings
 ghc-options:
 - -Wall
+- -Wcompat
 - -Werror
 - -Wcpp-undef
 - -Widentities
@@ -16,6 +17,8 @@ ghc-options:
 - -Wincomplete-uni-patterns
 - -Wpartial-fields
 - -Wredundant-constraints
+- -Wterm-variable-capture
+- -Wextended-warnings
 - -fno-warn-orphans
 dependencies:
 - base >=4.8
