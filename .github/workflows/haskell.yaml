@@ -29,6 +29,6 @@ jobs:
         run: |
           set -e
           mkdir -p ./stack-root
-          mv compose.override.github.yml compose.override.yml
+          mv compose.override.github.yaml compose.override.yaml
           echo "PROJECT_DIR=$PWD" >> .env
           ./scripts/build
