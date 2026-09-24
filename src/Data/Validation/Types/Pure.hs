@@ -31,7 +31,7 @@ data CanNull
   = IsNull
   | NotNull
   | InvalidNull Text.Text
-  deriving (Show, Eq)
+  deriving (Eq, Show)
 
 class Typeable input => Validatable input where
   inputText :: input -> Maybe Text.Text

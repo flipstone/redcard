@@ -8,6 +8,7 @@ where
 
 import Control.Monad.Trans.Class
 import qualified Data.Text as Text
+
 import Data.Validation.Types.Pure
 
 newtype ValidatorT input m a = ValidatorT

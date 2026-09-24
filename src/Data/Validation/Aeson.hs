@@ -1,7 +1,6 @@
 module Data.Validation.Aeson where
 
 import Control.Monad.Identity
-
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap

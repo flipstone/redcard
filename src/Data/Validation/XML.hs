@@ -5,7 +5,6 @@ module Data.Validation.XML
 where
 
 import Control.Applicative
-
 import qualified Data.ByteString.Lazy as LazyBS
 import qualified Data.Map as Map
 import Data.Maybe

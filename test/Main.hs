@@ -1,4 +1,5 @@
 import Data.Aeson
+
 import Data.Validation
 
 rejectsAll :: ValidatorT input IO Int
